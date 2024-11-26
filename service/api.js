@@ -12,11 +12,3 @@ export const getData = async (message) => {
     throw error; // Rethrow the error for handling at the call site
   }
 };
-
-
-
-// dealing with users
-// export const login = async (email , pass)=>{
-//     let response = await axios.get(`${url}/user/login/${email}/${pass}`);
-//     return response.data;
-// }
