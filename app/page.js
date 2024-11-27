@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getData } from "@/service/api";
+import { getData, checkServerStatus } from "@/service/api";
 
 export default function Home() {
   const [Response, setResponse] = useState(false);
+  const [Status, setStatus] = useState(false);
   const [LoaderActive, setLoaderActive] = useState(false);
   const [ResponseMessage, setResponseMessage] = useState(null);
 
+  // handle to fetch data after press enter key
   const handleEnterPress = (e) => {
     if (e.key === "Enter" && document.querySelector("input").value != "") {
       setLoaderActive(true);
@@ -26,23 +28,52 @@ export default function Home() {
     }
   };
 
-  const copyText =async (text) => {
+  // Handle to Copy Code
+  const copyText = async (text) => {
     try {
       await navigator.clipboard.writeText(text); // Use Clipboard API
       alert("Text copied to clipboard!");
     } catch (err) {
-      console.error("Failed to copy text: ", err);
+      // console.log("Failed to copy text: ", err);
       alert("Failed to copy text. Please try again.");
     }
-
   };
+
+  // function to animate website title
+  function typewriterEffect(text, elementId, speed) {
+    const element = document.getElementById(elementId);
+    let index = 0;
+
+    function typeCharacter() {
+      if (index < text.length) {
+        element.innerHTML += text.charAt(index);
+        index++;
+        setTimeout(typeCharacter, speed);
+      } else {
+        // Stop blinking cursor after typing
+        element.classList.remove("blinking-cursor");
+      }
+    }
+
+    // Dynamically set the width to accommodate the full text
+    element.style.width = `${text.length}ch`;
+    typeCharacter();
+  }
+
+  useEffect(() => {
+    typewriterEffect(" How may i help you!", "typewriter", 100);
+    checkServerStatus().then((response) => setStatus(response));
+  }, []);
 
   return (
     <>
       <div className="relative">
         {/* main frame */}
+        {/* Background wallpaper */}
         <div
-          className={`${Response ? "blur-[1px]" : ""} w-screen h-screen p-6 box-border flex items-center justify-center`}
+          className={`${
+            Response ? "blur-[1px]" : ""
+          } w-screen h-screen p-6 pb-20 md:pb-6 box-border flex items-end md:items-center justify-center`}
           style={{
             background: `
           linear-gradient(112.5deg, rgb(214, 214, 214) 0%, rgb(214, 214, 214) 10%, rgb(195, 195, 195) 10%, rgb(195, 195, 195) 53%, rgb(176, 176, 176) 53%, rgb(176, 176, 176) 55%, rgb(157, 157, 157) 55%, rgb(157, 157, 157) 60%, rgb(137, 137, 137) 60%, rgb(137, 137, 137) 88%, rgb(118, 118, 118) 88%, rgb(118, 118, 118) 91%, rgb(99, 99, 99) 91%, rgb(99, 99, 99) 100%),
@@ -53,23 +84,32 @@ export default function Home() {
             backgroundBlendMode: "overlay, overlay, normal",
           }}
         >
-          <div className="font-bold text-2xl text-blue-950 select-none font-mono absolute text-left left-6 top-6">
-            <span className="text-3xl">AI-</span>Generative
+          {/* Website logo */}
+          <div className="font-bold md:text-2xl text-blue-950 flex items-center gap-2 select-none font-mono absolute text-left left-6 top-6">
+            <div
+              className={`${
+                Status ? "bg-green-600" : "bg-red-500"
+              } w-2 h-2 rounded-full`}
+            ></div>
+            <span>
+              <span className="text-lg md:text-3xl">AI-</span>Generative
+            </span>
           </div>
 
+          {/* Main interface title with input field*/}
           <div className="w-full text-center">
-            <div className="text-4xl hover:font-bold font-mono mb-6">
-              <span className="font-bold">Hello,</span> How may I help you!
+            <div className="text-xl md:text-4xl hover:font-bold font-mono mb-2 md:mb-6">
+              <span className="font-bold">Hello,</span><span id="typewriter"></span>
             </div>
             <div className="flex justify-center">
-              <div className="relative w-10/12">
+              <div className="relative w-[95%] md:w-10/12">
                 <input
                   type="text"
-                  className="p-4 bg-transparent text-xl border-black  text-black w-full  border-2 rounded-full"
+                  className="p-2 md:p-4 bg-transparent text-xl border-black  text-black w-full  border-2 rounded-full"
                   onKeyDown={handleEnterPress}
                 />
                 <span
-                  className=" cursor-pointer select-none text-xl text-black py-4 px-6 bg-gray-500 hover:font-bold border-2 border-black rounded-e-full right-0  absolute"
+                  className=" cursor-pointer select-none text-xl text-black md:py-4 p-2 md:px-6 bg-gray-500 hover:font-bold border-2 border-black rounded-e-full right-0  absolute"
                   onClick={() => {
                     if (document.querySelector("input").value != "") {
                       getData(document.querySelector("input").value)
@@ -79,18 +119,100 @@ export default function Home() {
                         })
                         .catch((e) => {
                           alert("I am really Sorry for this Inconvenience.");
-                          console.error(e);
+                          // console.log(e);
                         });
                       setResponse(true);
                     }
                   }}
                 >
-                  GENERATE
+                  <span className="flex md:hidden px-2 pb-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                      color="#000000"
+                      fill="none"
+                    >
+                      <path
+                        d="M4 15.5C2.89543 15.5 2 14.6046 2 13.5C2 12.3954 2.89543 11.5 4 11.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M20 15.5C21.1046 15.5 22 14.6046 22 13.5C22 12.3954 21.1046 11.5 20 11.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M7 7L7 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M17 7L17 4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        cx="7"
+                        cy="3"
+                        r="1"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        cx="17"
+                        cy="3"
+                        r="1"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.5 7H10.5C7.67157 7 6.25736 7 5.37868 7.90898C4.5 8.81796 4.5 10.2809 4.5 13.2069C4.5 16.1329 4.5 17.5958 5.37868 18.5048C6.25736 19.4138 7.67157 19.4138 10.5 19.4138H11.5253C12.3169 19.4138 12.5962 19.5773 13.1417 20.1713C13.745 20.8283 14.6791 21.705 15.5242 21.9091C16.7254 22.1994 16.8599 21.7979 16.5919 20.6531C16.5156 20.327 16.3252 19.8056 16.526 19.5018C16.6385 19.3316 16.8259 19.2898 17.2008 19.2061C17.7922 19.074 18.2798 18.8581 18.6213 18.5048C19.5 17.5958 19.5 16.1329 19.5 13.2069C19.5 10.2809 19.5 8.81796 18.6213 7.90898C17.7426 7 16.3284 7 13.5 7Z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M9.5 15C10.0701 15.6072 10.9777 16 12 16C13.0223 16 13.9299 15.6072 14.5 15"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M9.00896 11H9"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M15.009 11H15"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span className="hidden md:flex">GENERATE</span>
                 </span>
               </div>
             </div>
           </div>
-          <div className="font-bold absolute text-center bottom-6">
+
+          {/* Footer text */}
+          <div className="md:visible invisible  font-bold absolute text-center bottom-6">
             AI-Generative |{" "}
             <span className="font-mono">
               This is my First AI based Project.{" "}
@@ -104,7 +226,9 @@ export default function Home() {
         {/* Response Frame */}
         {Response && (
           <div className="absolute top-0 flex items-center justify-center w-full h-full">
-            <div className="w-8/12 h-8/12 max-h-[90%] px-3 pb-3 rounded-lg shadow-md bg-yellow-200 overflow-y-scroll">
+            <div className="w-[95%] md:w-8/12 h-8/12 max-h-[80%] md-max-h-[90%] px-3 pb-3 rounded-lg shadow-md bg-yellow-200 overflow-y-scroll">
+
+            {/* Response frame title bar */}
               <div className="flex sticky top-0 z-10 pt-3 bg-yellow-200 justify-between px-4 font-bold border-b-2 border-black">
                 <div>Response</div>
                 <div
@@ -118,6 +242,7 @@ export default function Home() {
                   X
                 </div>
               </div>
+              {/* Result Area */}
               <div className="p-4">
                 {LoaderActive && (
                   <div className="flex space-x-2 justify-center items-center bg-transparent dark:invert">
@@ -127,26 +252,7 @@ export default function Home() {
                     <div className="h-3 w-3 bg-black rounded-full animate-bounce"></div>
                   </div>
                 )}
-                {/* {ResponseMessage == "" ? "Generating..." : <pre>{ResponseMessage}</pre>} */}
-                {/* <ul>
-                  {Array.isArray(ResponseMessage) && ResponseMessage.length > 0
-                    ? ResponseMessage.map((item, index) => {
-                        if (item.type === "code") {
-                          return (
-                            <li key={index}>
-                              <pre>{item.content}</pre>
-                            </li>
-                          );
-                        } else {
-                          return (
-                            <li key={index}>
-                              <p>{item.content}</p>
-                            </li>
-                          );
-                        }
-                      })
-                    : <li>Generating...</li>}
-                </ul> */}
+                {/* Mapping response */}
                 {ResponseMessage &&
                   ResponseMessage.response.map((item, index) => (
                     <div key={index} style={{ marginBottom: "10px" }}>
@@ -154,7 +260,10 @@ export default function Home() {
                         <p>{item.content}</p>
                       ) : item.type === "code" ? (
                         <div className="relative">
-                          <span className="absolute right-2 top-2 cursor-pointer" onClick={()=>copyText(item.content)}>
+                          <span
+                            className="absolute right-2 top-2 cursor-pointer"
+                            onClick={() => copyText(item.content)}
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"

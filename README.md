@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI-Generative
 
-## Getting Started
+AI-Generative is a web application that allows users to interact with an AI model by sending queries and receiving responses. This project is built using React and demonstrates how to fetch data from an API and handle user input.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Interactive Input**: Users can enter queries using a text input field and submit them by pressing the "Enter" key or clicking the "GENERATE" button/Icon.
+- **Response Display**: Responses from the AI are displayed in a dedicated response frame, including messages and code snippets.
+- **Copy to Clipboard**: Users can easily copy code snippets to their clipboard.
+- **Typing Animation**: The application features a typewriter effect for a dynamic greeting message.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **Next Js**: For building the user interface.
+- **JavaScript**: For application logic and interactivity.
+- **Tailwind CSS**: For styling the components.
+- **Backend**: use Spring Boot & Spring AI.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Reference
+- Official Documentations `https://spring.io/projects/spring-ai`
+- ChatGPT & Youtube
+- **It is required** because I have just started using Spring AI to improve and enhance my skills.
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+To run the application locally, follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/AI-Generative.git
+2. Navigate to the project directory:
+    ```bash
+    cd AI-Generative
+3. Install the dependencies:
+    ```bash
+    npm install axios
+4. Start the development server:
+    ```bash
+    npm npm run dev
+5. Open your browser and go to `http://localhost:3000`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Usage
+1. Type your query in the input field.
+2. Press "Enter" or click the "GENERATE" button to submit your query.
+3. The AI's response will appear in the response frame.
+4. If the response contains code, you can click the copy icon to copy it to your clipboard.
 
-## Deploy on Vercel
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Acknowledgments
+1. Thanks to all contributors and the community for their support.
+2. This is my first AI-based project (Beta Version).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Make Sure.
+- Please note that this is a beta version and may contain bugs or inaccuracies.
+- 
+Make sure to replace `https://github.com/yourusername/AI-Generative.git` with the actual URL of your repository. You can also customize any sections based on your specific needs or preferences.
