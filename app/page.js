@@ -8,26 +8,39 @@ export default function Home() {
   const [Status, setStatus] = useState(false);
   const [LoaderActive, setLoaderActive] = useState(false);
   const [ResponseMessage, setResponseMessage] = useState(null);
+  const [userInputMsg , setUserInputMsg] = useState("");
+
+  //Fetch data from backend
+  const handleGetData = (e) => {
+    setUserInputMsg(e);
+    setLoaderActive(true);
+    getData(e)
+      .then((response) => {
+        setResponseMessage(response);
+        document.querySelector("input").value = "";
+        setLoaderActive(false);
+      })
+      .catch((e) => {
+        Alert("SERVER ERROR : I am really Sorry for this Inconvenience.");
+        // console.error(e);
+        setLoaderActive(false);
+      });
+    setResponse(true);
+  };
 
   // handle to fetch data after press enter key
   const handleEnterPress = (e) => {
     if (e.key === "Enter" && document.querySelector("input").value != "") {
-      setLoaderActive(true);
-      getData(document.querySelector("input").value)
-        .then((response) => {
-          setResponseMessage(response);
-          document.querySelector("input").value = "";
-          setLoaderActive(false);
-        })
-        .catch((e) => {
-          Alert("SERVER ERROR : I am really Sorry for this Inconvenience.");
-          // console.error(e);
-          setLoaderActive(false);
-        });
-      setResponse(true);
+      handleGetData(document.querySelector("input").value);
     }
   };
 
+  //handle to fetch data after press Button
+  const handlePressBtn = () => {
+    if (document.querySelector("input").value != "") {
+      handleGetData(document.querySelector("input").value);
+    }
+  };
   // Handle to Copy Code
   const copyText = async (text) => {
     try {
@@ -99,7 +112,8 @@ export default function Home() {
           {/* Main interface title with input field*/}
           <div className="w-full text-center">
             <div className="text-xl md:text-4xl hover:font-bold font-mono mb-2 md:mb-6">
-              <span className="font-bold">Hello,</span><span id="typewriter"></span>
+              <span className="font-bold">Hello,</span>
+              <span id="typewriter"></span>
             </div>
             <div className="flex justify-center">
               <div className="relative w-[95%] md:w-10/12">
@@ -110,20 +124,7 @@ export default function Home() {
                 />
                 <span
                   className=" cursor-pointer select-none text-xl text-black md:py-4 p-2 md:px-6 bg-gray-500 hover:font-bold border-2 border-black rounded-e-full right-0  absolute"
-                  onClick={() => {
-                    if (document.querySelector("input").value != "") {
-                      getData(document.querySelector("input").value)
-                        .then((response) => {
-                          setResponseMessage(response);
-                          document.querySelector("input").value = "";
-                        })
-                        .catch((e) => {
-                          alert("I am really Sorry for this Inconvenience.");
-                          // console.log(e);
-                        });
-                      setResponse(true);
-                    }
-                  }}
+                  onClick={handlePressBtn}
                 >
                   <span className="flex md:hidden px-2 pb-1">
                     <svg
@@ -227,10 +228,9 @@ export default function Home() {
         {Response && (
           <div className="absolute top-0 flex items-center justify-center w-full h-full">
             <div className="w-[95%] md:w-8/12 h-8/12 max-h-[80%] md-max-h-[90%] px-3 pb-3 rounded-lg shadow-md bg-yellow-200 overflow-y-scroll">
-
-            {/* Response frame title bar */}
+              {/* Response frame title bar */}
               <div className="flex sticky top-0 z-10 pt-3 bg-yellow-200 justify-between px-4 font-bold border-b-2 border-black">
-                <div>Response</div>
+                <div className="font-mono text-xl">Response</div>
                 <div
                   className="cursor-pointer"
                   onClick={() => {
@@ -244,6 +244,58 @@ export default function Home() {
               </div>
               {/* Result Area */}
               <div className="p-4">
+                <div className="mb-2 flex gap-2 items-center justify-start">
+                  <svg
+                    className="p-1 rounded-full bg-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    color="#000000"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M7.5 17C9.8317 14.5578 14.1432 14.4428 16.5 17M14.4951 9.5C14.4951 10.8807 13.3742 12 11.9915 12C10.6089 12 9.48797 10.8807 9.48797 9.5C9.48797 8.11929 10.6089 7 11.9915 7C13.3742 7 14.4951 8.11929 14.4951 9.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span id="userInput" className="font-bold">{userInputMsg}</span>
+                </div>
+                {/* {!LoaderActive && (
+                  <svg
+                    className="p-1 mb-2 rounded-full bg-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    color="#000000"
+                    fill="none"
+                  >
+                    <path
+                      d="M4 16.4999C4 18.1567 5.34315 19.4999 7 19.4999C7 20.8806 8.11929 21.9999 9.5 21.9999C10.8807 21.9999 12 20.8806 12 19.4999C12 20.8806 13.1193 21.9998 14.5 21.9998C15.8807 21.9998 17 20.8805 17 19.4998C18.6569 19.4998 20 18.1566 20 16.4998C20 15.9311 19.8418 15.3994 19.567 14.9463C20.9527 14.6812 22 13.4628 22 11.9998C22 10.5367 20.9527 9.31831 19.567 9.05325C19.8418 8.60012 20 8.06842 20 7.49976C20 5.8429 18.6569 4.49976 17 4.49976C17 3.11904 15.8807 1.99976 14.5 1.99976C13.1193 1.99976 12 3.11914 12 4.49985C12 3.11914 10.8807 1.99985 9.5 1.99985C8.11929 1.99985 7 3.11914 7 4.49985C5.34315 4.49985 4 5.843 4 7.49985C4 8.06851 4.15822 8.60022 4.43304 9.05335C3.04727 9.3184 2 10.5368 2 11.9999C2 13.4629 3.04727 14.6813 4.43304 14.9464C4.15822 15.3995 4 15.9312 4 16.4999Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M7.5 14.4999L9.34189 8.97422C9.43631 8.69095 9.7014 8.49988 10 8.49988C10.2986 8.49988 10.5637 8.69095 10.6581 8.97422L12.5 14.4999M15.5 8.49988V14.4999M8.5 12.4999H11.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )} */}
                 {LoaderActive && (
                   <div className="flex space-x-2 justify-center items-center bg-transparent dark:invert">
                     <span className="sr-only">Loading...</span>
@@ -255,9 +307,16 @@ export default function Home() {
                 {/* Mapping response */}
                 {ResponseMessage &&
                   ResponseMessage.response.map((item, index) => (
-                    <div key={index} style={{ marginBottom: "10px" }}>
+                    <div key={index} className="font-sans" style={{ marginBottom: "10px" }}>
                       {item.type === "message" ? (
-                        <p>{item.content}</p>
+                        <div>
+                          {item.content.split("\n").map((line, idx) => (
+                            <React.Fragment key={idx}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          ))}
+                        </div>
                       ) : item.type === "code" ? (
                         <div className="relative">
                           <span
