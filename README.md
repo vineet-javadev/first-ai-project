@@ -27,10 +27,10 @@ To run the application locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/AI-Generative.git
+   git clone https://github.com/vineet-javadev/first-ai-project.git
 2. Navigate to the project directory:
     ```bash
-    cd AI-Generative
+    cd first-ai-project
 3. Install the dependencies:
     ```bash
     npm install axios
@@ -54,5 +54,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ### Make Sure.
 - Please note that this is a beta version and may contain bugs or inaccuracies.
-- 
-Make sure to replace `https://github.com/yourusername/AI-Generative.git` with the actual URL of your repository. You can also customize any sections based on your specific needs or preferences.
